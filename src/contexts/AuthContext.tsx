@@ -8,6 +8,8 @@ type AuthContextData = {
   user: UserProps,
   isAuthenticated: boolean
   signIn: (credentials: SignInProps) => Promise<void>
+  loadingAuth: boolean
+  loading: boolean
 }
 
 type UserProps = {
@@ -37,6 +39,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   })
 
   const [loadingAuth, setLoadingAuth] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   // !! => converte para boolean
   const isAuthenticated = !!user.name
@@ -60,6 +63,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         })
 
       }
+
+      setLoading(false)
+
     }
 
   }, [])
@@ -100,7 +106,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn, loading, loadingAuth }}>
       {children}
     </AuthContext.Provider>
   )
