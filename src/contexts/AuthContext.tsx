@@ -1,4 +1,4 @@
-import React, { useState, createContext, ReactNode } from "react";
+import React, { useState, createContext, ReactNode, useEffect } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -40,6 +40,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // !! => converte para boolean
   const isAuthenticated = !!user.name
+
+  useEffect(() => {
+
+    async function getUser() {
+      // Pegar os dados salvos do usuario
+      const userInfo = await AsyncStorage.getItem('@sugeitopizzaria')
+      let hasUser: UserProps = JSON.parse(userInfo || '{}')
+
+      // Verificar se há informações
+      if (Object.keys(hasUser).length > 0) {
+        api.defaults.headers.common['Authorization'] = `Bearer ${hasUser.token}`
+
+        setUser({
+          id: hasUser.id,
+          name: hasUser.name,
+          email: hasUser.email,
+          token: hasUser.token
+        })
+
+      }
+    }
+
+  }, [])
 
   async function signIn({ email, password }: SignInProps){
     setLoadingAuth(true)
