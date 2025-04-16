@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { StackParamsList } from '../../routes/app.routes'
 
+import { api } from '../../services/api'
+
 export default function Dashboard(){
   const navigation = useNavigation<NativeStackNavigationProp<StackParamsList>>()
   const [number, setNumber] = useState('')
@@ -15,8 +17,14 @@ export default function Dashboard(){
       return
     }
 
+    const response = await api.post('/order', {
+      table: Number(number)
+    })
+
     // Fazer a requisição, abrir a mesa e navegar para a próxima tela
-    navigation.navigate('Order', { number: number, order_id: '1d0c4af1-74ce-4189-8e39-5dc41cf102b1' })
+    navigation.navigate('Order', { number: number, order_id: response.data.id })
+
+    setNumber('')
   }
   
   return (
