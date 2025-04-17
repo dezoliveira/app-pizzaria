@@ -148,7 +148,10 @@ export default function Order() {
   }
 
   function handleFinishOrder() {
-    alert('teste')
+    navigation.navigate("FinishOrder", {
+      number: route.params.number,
+      order_id: route.params.order_id
+    })
   }
 
   return (
